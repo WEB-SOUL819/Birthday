@@ -1,0 +1,228 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Day — A Special Page for My Brother </title>
+  <meta name="description" content="A modern, interactive wishing page with apology and late-wish animation." />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--glass: rgba(255,255,255,0.06);--accent: linear-gradient(90deg,#7c3aed,#06b6d4)}
+    html,body{height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    .bg-hero{background: radial-gradient( circle at 10% 20%, rgba(124,58,237,0.15), transparent 10%), radial-gradient( circle at 90% 80%, rgba(6,182,212,0.12), transparent 10%), linear-gradient(180deg,#0b1020,#061023)}
+    .fancy-shadow{box-shadow: 0 6px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02)}
+    .typewriter{overflow:hidden;border-right:.12em solid rgba(255,255,255,0.25);white-space:nowrap}
+    .confetti-piece{position:absolute;will-change:transform,opacity}
+  </style>
+</head>
+<body class="bg-hero text-slate-100 antialiased">
+  <main class="min-h-screen flex items-center justify-center p-6">
+    <section class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center"><!-- Left: Visual card -->
+  <div class="p-6 rounded-2xl fancy-shadow bg-gradient-to-b from-white/3 via-white/2 to-transparent backdrop-blur-md">
+    <header class="flex items-center justify-between mb-4">
+      <div>
+        <h1 class="text-2xl font-extrabold tracking-tight">For <span id="brotherName">Brother</span></h1>
+        <p class="text-sm text-slate-300">16 October — A special day</p>
+      </div>
+      <div class="text-right text-xs text-slate-400">Made with care • Aosmic Studio</div>
+    </header>
+
+    <div class="rounded-xl overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/40 p-6 relative">
+      <div class="flex items-start gap-4">
+        <div class="w-24 h-24 rounded-xl bg-gradient-to-tr from-indigo-600 to-teal-400 flex items-center justify-center text-4xl font-extrabold">👑</div>
+        <div>
+          <div class="text-lg font-semibold">Happy Day!</div>
+          <div class="mt-2 text-slate-300 text-sm typewriter" id="mainLine">Wishing you joy, success and endless reasons to smile.</div>
+        </div>
+      </div>
+
+      <!-- Apology badge -->
+      <div id="apologyBadge" class="mt-6 p-3 rounded-lg bg-white/6 text-sm text-amber-100 border border-amber-400/20">
+        <strong>Apology:</strong> I'm sorry for the late wish — I was tied up with urgent work. Please forgive the delay.
+      </div>
+
+      <!-- Action buttons -->
+      <div class="mt-6 flex gap-3">
+        <button id="openWishBtn" class="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 font-semibold shadow-md">Open full wish</button>
+        <button id="confettiBtn" class="px-4 py-2 rounded-lg border border-white/8 text-sm">Celebrate 🎉</button>
+        <button id="downloadBtn" class="px-4 py-2 rounded-lg bg-white/6 text-sm">Download Card</button>
+      </div>
+
+      <!-- Decorative confetti container -->
+      <div id="confettiContainer" class="pointer-events-none absolute inset-0"></div>
+    </div>
+
+    <footer class="mt-4 text-xs text-slate-400">Tip: Edit the name and message using the controls on the right, then download or print the card.</footer>
+  </div>
+
+  <!-- Right: Controls and full message -->
+  <aside class="p-6 rounded-2xl fancy-shadow bg-white/2 backdrop-blur-md">
+    <h2 class="text-lg font-semibold mb-2">Customize the message</h2>
+    <label class="block text-xs text-slate-300 mb-1">Recipient name</label>
+    <input id="inputName" class="w-full p-3 rounded-md bg-transparent border border-white/10 mb-4" placeholder="Brother" value="Brother" />
+
+    <label class="block text-xs text-slate-300 mb-1">Short headline</label>
+    <input id="inputHeadline" class="w-full p-3 rounded-md bg-transparent border border-white/10 mb-4" placeholder="Happy Birthday!" value="Happy Day!" />
+
+    <label class="block text-xs text-slate-300 mb-1">Full message</label>
+    <textarea id="inputMessage" rows="6" class="w-full p-3 rounded-md bg-transparent border border-white/10 mb-4">Wishing you joy, success and endless reasons to smile. I apologise for the late wish — I was busy with some work. Love you.</textarea>
+
+    <div class="flex gap-3">
+      <button id="applyBtn" class="flex-1 px-4 py-2 rounded-lg bg-emerald-600 font-semibold">Apply</button>
+      <button id="resetBtn" class="px-4 py-2 rounded-lg border border-white/10">Reset</button>
+    </div>
+
+    <hr class="my-4 border-white/6" />
+
+    <h3 class="text-sm font-medium mb-2">Advanced</h3>
+    <div class="grid grid-cols-1 gap-2 text-xs text-slate-300">
+      <button id="playMusicBtn" class="p-2 rounded-md bg-white/3">Play soft background music</button>
+      <label class="flex items-center gap-2"><input id="autoConfetti" type="checkbox" /> Trigger confetti automatically on open</label>
+      <button id="printBtn" class="p-2 rounded-md bg-white/3">Print / Save as PDF</button>
+    </div>
+
+    <div class="mt-6 text-xs text-slate-400">Date: <strong>16 October</strong></div>
+  </aside>
+</section>
+
+  </main>  <!-- Hidden SVG for download card -->  <svg id="cardSVG" xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" style="display:none">
+    <defs>
+      <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#7c3aed" /><stop offset="1" stop-color="#06b6d4" /></linearGradient>
+    </defs>
+    <rect width="100%" height="100%" fill="#071024" rx="28" />
+    <rect x="40" y="40" width="1120" height="595" rx="20" fill="url(#g1)" opacity="0.12" />
+    <text x="100" y="150" fill="#fff" font-size="64" font-weight="700">For: <tspan id="svgName">Brother</tspan></text>
+    <text x="100" y="230" fill="#e6eef8" font-size="36" id="svgMessage">Wishing you joy, success and endless reasons to smile.</text>
+    <text x="100" y="520" fill="#c6e9f4" font-size="28">16 October</text>
+  </svg>  <!-- Audio (optional) --><audio id="bgAudio" loop src="" preload="none"></audio>
+
+  <script>
+    // Elements
+    const brotherName = document.getElementById('brotherName');
+    const inputName = document.getElementById('inputName');
+    const inputHeadline = document.getElementById('inputHeadline');
+    const inputMessage = document.getElementById('inputMessage');
+    const applyBtn = document.getElementById('applyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const mainLine = document.getElementById('mainLine');
+    const openWishBtn = document.getElementById('openWishBtn');
+    const confessionBadge = document.getElementById('apologyBadge');
+    const confettiBtn = document.getElementById('confettiBtn');
+    const confettiContainer = document.getElementById('confettiContainer');
+    const autoConfetti = document.getElementById('autoConfetti');
+    const playMusicBtn = document.getElementById('playMusicBtn');
+    const printBtn = document.getElementById('printBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // Typewriter effect
+    function typeWriter(el, text, speed=30){
+      el.textContent = '';
+      el.classList.add('typewriter');
+      let i=0; function step(){
+        if(i<=text.length){ el.textContent = text.slice(0,i); i++; setTimeout(step, speed); }
+        else el.classList.remove('typewriter');
+      } step();
+    }
+
+    // Apply
+    applyBtn.addEventListener('click', ()=>{
+      brotherName.textContent = inputName.value || 'Brother';
+      typeWriter(mainLine, inputMessage.value || 'Wishing you joy and success.');
+      // update SVG text for download
+      document.getElementById('svgName').textContent = inputName.value || 'Brother';
+      document.getElementById('svgMessage').textContent = inputMessage.value || '';
+    });
+
+    resetBtn.addEventListener('click', ()=>{
+      inputName.value = 'Brother';
+      inputHeadline.value = 'Happy Day!';
+      inputMessage.value = "Wishing you joy, success and endless reasons to smile. I apologise for the late wish — I was busy with some work. Love you.";
+      applyBtn.click();
+    });
+
+    // Confetti generator (lightweight)
+    function fireConfetti(amount=30){
+      const colors = ['#7c3aed','#06b6d4','#f59e0b','#ef4444','#10b981'];
+      for(let i=0;i<amount;i++){
+        const el = document.createElement('div');
+        el.className='confetti-piece';
+        const size = 8 + Math.random()*14;
+        el.style.width = size+'px'; el.style.height = size+'px';
+        el.style.left = (20 + Math.random()*60)+'%';
+        el.style.top = (-10 + Math.random()*10)+'%';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.transform = `rotate(${Math.random()*360}deg)`;
+        confettiContainer.appendChild(el);
+        // animate
+        const duration = 2000 + Math.random()*2000;
+        el.animate([
+          { transform: `translateY(0) rotate(${Math.random()*360}deg)`, opacity:1 },
+          { transform: `translateY(${400 + Math.random()*200}px) rotate(${Math.random()*720}deg)`, opacity:0 }
+        ], { duration, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        setTimeout(()=>el.remove(), duration+50);
+      }
+    }
+
+    confettiBtn.addEventListener('click', ()=> fireConfetti(40));
+
+    // Auto open behavior
+    openWishBtn.addEventListener('click', ()=>{
+      // show a subtle full-screen modal (using browser alert as fallback)
+      const message = inputMessage.value || mainLine.textContent;
+      const full = `Dear ${inputName.value || 'Brother'},\n\n${message}\n\nDate: 16 October\n\n(I'm sorry I am late; I was busy with some work.)`;
+      // custom modal
+      alert(full);
+      if(autoConfetti.checked) fireConfetti(80);
+    });
+
+    // Print
+    printBtn.addEventListener('click', ()=> window.print());
+
+    // Music (user can provide a link to an MP3 by pasting into the audio src)
+    playMusicBtn.addEventListener('click', ()=>{
+      const audio = document.getElementById('bgAudio');
+      if(!audio.src){
+        const url = prompt('Paste a direct link to a short instrumental MP3 (or leave blank to cancel):');
+        if(url){ audio.src = url; audio.play().catch(()=>alert('Unable to play — check the link or browser autoplay settings.')); playMusicBtn.textContent='Stop music'; }
+      } else {
+        audio.pause(); audio.src=''; playMusicBtn.textContent='Play soft background music';
+      }
+    });
+
+    // Download card: serialize SVG to PNG and trigger download
+    downloadBtn.addEventListener('click', async ()=>{
+      const svg = document.getElementById('cardSVG');
+      const serializer = new XMLSerializer();
+      const source = serializer.serializeToString(svg);
+      const svgBlob = new Blob([source], {type:'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+      img.onload = ()=>{
+        const canvas = document.createElement('canvas'); canvas.width=1200; canvas.height=675;
+        const ctx = canvas.getContext('2d'); ctx.fillStyle='#071024'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(blob=>{
+          const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+          a.download = `${(inputName.value||'Brother')}_wish_16Oct.png`; a.click();
+        }, 'image/png');
+      };
+      img.crossOrigin='anonymous'; img.src = url;
+    });
+
+    // initialize
+    window.addEventListener('load', ()=>{
+      applyBtn.click();
+      // gently trigger confetti if the day is Oct 16 (automatic celebratory nudge)
+      const now = new Date();
+      if(now.getDate()===16 && now.getMonth()===9 && autoConfetti.checked){ // month 9 => October (0-indexed)
+        fireConfetti(60);
+      }
+    });
+  </script></body>
+</html>
